@@ -8,9 +8,9 @@ A full-stack **Wholesale & Distribution ERP + CRM Portal** built with **React**,
 
 | Part | Platform | URL |
 |------|----------|-----|
-| 🌐 Frontend | Vercel | _[Add after deployment]_ |
-| ⚙️ Backend API | Render | _[Add after deployment]_ |
-| 🗄️ Database | Supabase | _[Add after deployment]_ |
+| 🌐 Frontend | Vercel | [https://erp-crm-portal-one.vercel.app](https://erp-crm-portal-one.vercel.app) |
+| ⚙️ Backend API | Render | [https://erp-crm-portal-cm83.onrender.com](https://erp-crm-portal-cm83.onrender.com) |
+| 🗄️ Database | Supabase | Connected via Transaction Pooler (`?pgbouncer=true`) |
 
 ---
 
@@ -269,6 +269,12 @@ Import `postman_collection.json` into Postman for the full API documentation.
 - Status workflow: `DRAFT → CONFIRMED → CANCELLED`.
 - Stock auto-deduction on CONFIRMED, auto-restoration on CANCELLED/Delete.
 - Printable official Delivery Challan invoice view.
+
+### 5. 🚀 Production Scalability & Security
+- **Traffic Control (express-rate-limit)**: Global rate limiting (100 requests / 15m) and strict Brute-Force protection on the login route (5 attempts / 15m).
+- **Security Headers (helmet)**: Protection against XSS, clickjacking, and sniffing via 14 secure HTTP headers.
+- **Payload Compression (compression)**: Gzip compression applied to all API responses for lightning-fast dashboard data loading.
+- **Dockerized Architecture**: Multi-stage `Dockerfile` and `docker-compose` set up for consistent local and production parity.
 
 ---
 
