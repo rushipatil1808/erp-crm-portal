@@ -1,5 +1,8 @@
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import compression from 'compression';
+import rateLimit from 'express-rate-limit';
 import { env } from './config/env';
 import { errorHandler } from './middleware/error.middleware';
 import { ApiError } from './utils/ApiError';
@@ -11,6 +14,22 @@ import productRoutes from './modules/products/product.routes';
 import challanRoutes from './modules/challans/challan.routes';
 
 const app: Application = express();
+
+// Security: Set secure HTTP headers
+app.use(helmet());
+
+// Performance: Gzip compress all responses
+app.use(compression());
+
+// Traffic Control: Global Rate Limiter (100 requests per 15 minutes per IP)
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: { success: false, message: 'Too many requests from this IP, please try again after 15 minutes' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use('/api', globalLimiter);
 
 // CORS - support multiple allowed origins (comma-separated in env)
 const allowedOrigins = env.CORS_ORIGINS.split(',').map((o) => o.trim());
