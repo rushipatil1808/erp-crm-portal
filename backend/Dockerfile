@@ -3,6 +3,9 @@
 # ─────────────────────────────────────────
 FROM node:18-alpine AS builder
 
+# Install OpenSSL (required by Prisma on Alpine)
+RUN apk add --no-cache openssl
+
 WORKDIR /app
 
 # Install dependencies
@@ -10,7 +13,7 @@ COPY package*.json ./
 COPY prisma ./prisma/
 RUN npm ci
 
-# Generate Prisma client
+# Generate Prisma client (linux-musl target for Alpine)
 RUN npx prisma generate
 
 # Copy source & compile TypeScript
@@ -21,6 +24,9 @@ RUN npm run build
 # Stage 2: Production runtime
 # ─────────────────────────────────────────
 FROM node:18-alpine AS runner
+
+# Install OpenSSL (required by Prisma at runtime)
+RUN apk add --no-cache openssl
 
 WORKDIR /app
 
